@@ -1,4 +1,3 @@
-  
 package buildcraft.test.core;
 
 import java.util.Map.Entry;
@@ -82,8 +81,16 @@ public class BoxTester {
         Box box1 = new Box(new BlockPos(0, 0, 0), new BlockPos(2, 2, 2));
         Box box2 = new Box(new BlockPos(1, 1, 1), new BlockPos(3, 3, 3));
         Box inter = new Box(new BlockPos(1, 1, 1), new BlockPos(2, 2, 2));
-        Assert.assertEquals(inter, box1.getIntersect(box2));
+       
         Assert.assertEquals(inter, box2.getIntersect(box1));
+    }
+       @Test
+    public void testIntersection6() {
+        Box box1 = new Box(new BlockPos(0, 0, 0), new BlockPos(2, 2, 2));
+        Box box2 = new Box(new BlockPos(1, 1, 1), new BlockPos(3, 3, 3));
+        Box inter = new Box(new BlockPos(1, 1, 1), new BlockPos(2, 2, 2));
+        Assert.assertEquals(inter, box1.getIntersect(box2));
+        
     }
 
     @Test
@@ -92,6 +99,14 @@ public class BoxTester {
         Box box2 = new Box(new BlockPos(0, 0, 0), new BlockPos(3, 3, 3));
         Box inter = new Box(new BlockPos(0, 0, 0), new BlockPos(2, 2, 2));
         Assert.assertEquals(inter, box1.getIntersect(box2));
+        
+    }
+     @Test
+    public void testIntersection5() {
+        Box box1 = new Box(new BlockPos(0, 0, 0), new BlockPos(2, 2, 2));
+        Box box2 = new Box(new BlockPos(0, 0, 0), new BlockPos(3, 3, 3));
+        Box inter = new Box(new BlockPos(0, 0, 0), new BlockPos(2, 2, 2));
+     
         Assert.assertEquals(inter, box2.getIntersect(box1));
     }
 
@@ -101,6 +116,44 @@ public class BoxTester {
         Box box2 = new Box(new BlockPos(0, 0, 0), new BlockPos(1, 1, 1));
         Box inter = new Box(new BlockPos(1, 1, 1), new BlockPos(1, 1, 1));
         Assert.assertEquals(inter, box1.getIntersect(box2));
+       
+    }
+    
+    @Test
+    public void testIntersection4() {
+        Box box1 = new Box(new BlockPos(1, 1, 1), new BlockPos(2, 2, 2));
+        Box box2 = new Box(new BlockPos(0, 0, 0), new BlockPos(1, 1, 1));
+        Box inter = new Box(new BlockPos(1, 1, 1), new BlockPos(1, 1, 1));
+ 
         Assert.assertEquals(inter, box2.getIntersect(box1));
     }
+       @Test
+    public void testIntersection7() {
+        Box box1 = new Box(new BlockPos(1, 1, 1), new BlockPos(2, 2, 2));
+        Box box2 = new Box(new BlockPos(0, 0, 0), new BlockPos(1, 1, 1));
+        Box box3 = new Box(new BlockPos(1, 1, 1), new BlockPos(1, 2, 2));
+        Box inter = new Box(new BlockPos(1, 1, 1), new BlockPos(1, 2, 2));
+ 
+        Assert.assertEquals(inter, box1.getIntersect(box3));
+    }
+
+    @Test
+    public void testEmpty() {
+        Box box1 = new Box(null,null);
+        Assert.assertEquals(new BlockPos(0, 0, 0), box1.size());
+    }
+    @Test
+    public void TestDoubleMin(){
+     Box box = new Box(MIN,MIN);
+     Assert.assertEquals(MIN,box.max());
+	}
+    @Test
+    public void TestDoubleMax(){
+     Box box = new Box(MAX,MAX);
+     Assert.assertEquals(MAX,box.min());
+	}
+
+    // goal is to creat some sort of automated testing for this .
+    
+
 }
