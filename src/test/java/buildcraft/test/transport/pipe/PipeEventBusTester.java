@@ -1,22 +1,12 @@
 package buildcraft.test.transport.pipe;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Random;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
-import buildcraft.api.transport.pipe.PipeEventItem.ModifySpeed;
-import buildcraft.api.transport.pipe.PipeEventPower;
+
 import buildcraft.transport.pipe.PipeEventBus;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 
 public class PipeEventBusTester {
     public static long dontInlineThis = 0;
@@ -81,119 +71,5 @@ public class PipeEventBusTester {
         public void modifySpeed2(PipeEventItem.ModifySpeed event) {
             event.targetSpeed = 3;
         }
-    }
-    
-    /* ----------------------- Test for 1st commit ---------------------- */
-    
-    public static final int NUM_TEST = 40;
-    public static final EnumDyeColor FINAL_COLOR = EnumDyeColor.BLACK;
-    public static final EnumFacing FINAL_FROM = EnumFacing.DOWN;
-    
-    @Test
-    public void modifySpeedTest()
-    {
-    	PipeEventBus bus = new PipeEventBus();
-    	PipeEventItem.ModifySpeed event;
-    	
-    	for(int i = 1; i < NUM_TEST; i++)
-    	{
-    		bus = new PipeEventBus();
-    		bus.registerHandler(new ModifySpeed3((double)i));
-    		event = initDefaultSpeed();
-    		bus.fireEvent(event);
-    		Assert.assertEquals(i, event.targetSpeed, 0.00001);
-    	}
-    }
-    
-    public PipeEventItem.ModifySpeed initDefaultSpeed()
-    {
-    	return new PipeEventItem.ModifySpeed(null,null,null,1);
-    }
-    
-    public static class ModifySpeed3
-    {
-    	public final double speed;
-    	
-    	public ModifySpeed3(final double speed)
-    	{
-    		this.speed = speed;
-    	}
-    	
-        @PipeEventHandler
-        public void modifySpeed2(PipeEventItem.ModifySpeed event) 
-        {
-            event.targetSpeed = this.speed;
-        }
-    }
-    
-    @Test
-    public void testInsert()
-    {
-    	Block block = getRandomBlock();
-    	ItemStack stack = InitStack(10);
-    	PipeEventItem.TryInsert ins = new PipeEventItem.TryInsert(,stack);
-    }
-    
-    @Test
-    public void testItemEntry()
-    {
-    	for(int i = 0; i < NUM_TEST; i++)
-    	{
-    		EnumDyeColor randColor = getRandomColor();
-    		EnumFacing randFace = getRandomFaceDir();
-    		ItemStack stack = getRandomStack(i);
-    		PipeEventItem.ItemEntry entry = new PipeEventItem.ItemEntry(randColor, stack, 
-    				randFace);
-    		Assert.assertEquals(randColor, entry.colour);
-    		Assert.assertEquals(stack, entry.stack);
-    		Assert.assertEquals(randFace, entry.from);
-    	}
-    }
-    
-    public ItemStack getRandomStack(int i)
-    {
-    	Random random = new Random();
-    	Block block;
-    	int j = random.nextInt(100);
-    	if(j < 20)
-    		block = new Block(Material.AIR);
-    	else if(j < 40)
-    		block = new Block(Material.ANVIL);
-    	else if(j < 60)
-    		block = new Block(Material.BARRIER);
-    	else if(j < 80)
-    		block = new Block(Material.CACTUS);
-    	else
-    		block = new Block(Material.CIRCUITS);
-    	
-    	ItemStack stack = new ItemStack(block, i);
-    	return stack;
-    }
-    
-    public EnumDyeColor getRandomColor()
-    {
-    	Random random = new Random();
-    	int i = random.nextInt(100);
-    	return i < 5 ? EnumDyeColor.BLACK : 
-    		(i < 10 ? EnumDyeColor.GRAY : 
-    			(i < 15 ? EnumDyeColor.SILVER : 
-    				(i < 18 ? EnumDyeColor.BROWN : 
-    					(random.nextInt(500) == 0 ? EnumDyeColor.PINK : EnumDyeColor.WHITE))));
-    }
-    
-    public Block getRandomBlock()
-    {
-    	
-    }
-    
-    public EnumFacing getRandomFaceDir()
-    {
-    	Random random = new Random();
-    	int i = random.nextInt(100);
-    	return i < 5 ? EnumFacing.DOWN : 
-    		(i < 10 ? EnumFacing.EAST : 
-    			(i < 15 ? EnumFacing.NORTH: 
-    				(i < 18 ? EnumFacing.NORTH: 
-    					(random.nextInt(500) == 0 ? EnumFacing.WEST : EnumFacing.UP))));
     }
 }
