@@ -1,16 +1,15 @@
 package buildcraft.test.transport.pipe;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import buildcraft.api.transport.pipe.IFlowItems;
+import buildcraft.api.transport.pipe.IPipeHolder;
 import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
-import buildcraft.api.transport.pipe.PipeEventItem.ModifySpeed;
-import buildcraft.api.transport.pipe.PipeEventPower;
+
 import buildcraft.transport.pipe.PipeEventBus;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -83,18 +82,17 @@ public class PipeEventBusTester {
         }
     }
     
-    /* ----------------------- Test for 1st commit ---------------------- */
-    
+    /* -------------------------- My test ------------------------------------ */
     public static final int NUM_TEST = 40;
     public static final EnumDyeColor FINAL_COLOR = EnumDyeColor.BLACK;
     public static final EnumFacing FINAL_FROM = EnumFacing.DOWN;
-    
+
     @Test
     public void modifySpeedTest()
     {
     	PipeEventBus bus = new PipeEventBus();
     	PipeEventItem.ModifySpeed event;
-    	
+
     	for(int i = 1; i < NUM_TEST; i++)
     	{
     		bus = new PipeEventBus();
@@ -104,36 +102,71 @@ public class PipeEventBusTester {
     		Assert.assertEquals(i, event.targetSpeed, 0.00001);
     	}
     }
-    
+
     public PipeEventItem.ModifySpeed initDefaultSpeed()
     {
     	return new PipeEventItem.ModifySpeed(null,null,null,1);
     }
-    
+
     public static class ModifySpeed3
     {
     	public final double speed;
-    	
+
     	public ModifySpeed3(final double speed)
     	{
     		this.speed = speed;
     	}
-    	
+
         @PipeEventHandler
         public void modifySpeed2(PipeEventItem.ModifySpeed event) 
         {
             event.targetSpeed = this.speed;
         }
     }
-    
+
     @Test
     public void testInsert()
     {
-    	Block block = getRandomBlock();
-    	ItemStack stack = InitStack(10);
-    	PipeEventItem.TryInsert ins = new PipeEventItem.TryInsert(,stack);
+    	Random random = new Random();
+    	int rand = 0;
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		rand = random.nextInt(11);
+        	ItemStack stack = getRandomStack(rand);
+        	EnumDyeColor randColor = getRandomColor();
+        	EnumFacing randFace = getRandomFaceDir();
+        	IPipeHolder holder;
+        	IFlowItems flow;
+        	
+        	PipeEventItem.TryInsert ins = new PipeEventItem.TryInsert(holder, flow, randColor,
+        			randFace, stack);
+        	
+        	Assert.assertEquals(ins.colour, randColor);
+        	Assert.assertEquals(ins.flow, randFace);
+        	Assert.assertEquals(ins.attempting, stack);
+        	Assert.assertEquals(ins.accepted, rand);
+    	}
     }
     
+    @Test
+    public void testReachDest()
+    {
+    	Random random = new Random();
+    	int rand = 0;
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		rand = random.nextInt(11);
+        	ItemStack stack = getRandomStack(rand);
+    		EnumDyeColor randColor = getRandomColor();
+    		EnumFacing randFace = getRandomFaceDir();
+    		IPipeHolder holder;
+    		IFlowItems flow;
+    		PipeEventItem.ReachDest dest = new PipeEventItem.ReachDest(holder, flow, randColor
+    				, stack, randFace);
+    		
+    	}
+    }
+
     @Test
     public void testItemEntry()
     {
@@ -149,7 +182,7 @@ public class PipeEventBusTester {
     		Assert.assertEquals(randFace, entry.from);
     	}
     }
-    
+
     public ItemStack getRandomStack(int i)
     {
     	Random random = new Random();
@@ -165,11 +198,11 @@ public class PipeEventBusTester {
     		block = new Block(Material.CACTUS);
     	else
     		block = new Block(Material.CIRCUITS);
-    	
+
     	ItemStack stack = new ItemStack(block, i);
     	return stack;
     }
-    
+
     public EnumDyeColor getRandomColor()
     {
     	Random random = new Random();
@@ -180,12 +213,7 @@ public class PipeEventBusTester {
     				(i < 18 ? EnumDyeColor.BROWN : 
     					(random.nextInt(500) == 0 ? EnumDyeColor.PINK : EnumDyeColor.WHITE))));
     }
-    
-    public Block getRandomBlock()
-    {
-    	
-    }
-    
+
     public EnumFacing getRandomFaceDir()
     {
     	Random random = new Random();
@@ -196,4 +224,18 @@ public class PipeEventBusTester {
     				(i < 18 ? EnumFacing.NORTH: 
     					(random.nextInt(500) == 0 ? EnumFacing.WEST : EnumFacing.UP))));
     }
+    
+    
+    
+    public Block getRandomBlock()
+    {
+    	Random random = new Random();
+    	int i = random.nextInt(100);
+    	return i < 5 ? new Block(Material.AIR) : 
+    		(i < 10 ? new Block(Material.ANVIL) : 
+    			(i < 15 ? new Block(Material.CACTUS) : 
+    				(i < 18 ? new Block(Material.CARPET) : 
+    					(random.nextInt(500) == 0 ? new Block(Material.CLOTH) : new Block(Material.GLASS)))));
+    }
+    
 }
