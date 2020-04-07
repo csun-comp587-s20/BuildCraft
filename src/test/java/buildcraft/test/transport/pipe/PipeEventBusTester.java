@@ -83,6 +83,7 @@ public class PipeEventBusTester {
     }
     
     /* -------------------------- My test ------------------------------------ */
+    
     public static final int NUM_TEST = 40;
     public static final EnumDyeColor FINAL_COLOR = EnumDyeColor.BLACK;
     public static final EnumFacing FINAL_FROM = EnumFacing.DOWN;
@@ -179,15 +180,14 @@ public class PipeEventBusTester {
     	{
     		rand = random.nextInt(11);
         	ItemStack stack = getRandomStack(rand);
-    		EnumDyeColor randColor = getRandomColor();
+    		ItemStack stack2 = getRandomStack(rand);
     		EnumFacing randFace = getRandomFaceDir();
     		IPipeHolder holder = null;
     		IFlowItems flow = null;
-    		PipeEventItem.ReachDest dest = new PipeEventItem.ReachDest.OnInsert(holder, flow, randColor
-    				, stack, randFace);
-    		dest.setStack(stack);
-    		Assert.assertEquals(dest.colour, randColor);
-    		Assert.assertEquals(dest.getStack(), stack);
+    		IFlowItems other = null;
+    		PipeEventItem ejected = new PipeEventItem.Ejected.IntoPipe(holder, flow, stack, 
+    				stack2, randFace, other);
+    		
     	}
     }
 
