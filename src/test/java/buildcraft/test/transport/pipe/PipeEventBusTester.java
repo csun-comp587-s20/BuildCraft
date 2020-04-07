@@ -1,7 +1,10 @@
 package buildcraft.test.transport.pipe;
 
+updated
 import java.util.Random;
 
+
+ master
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,11 +14,6 @@ import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
 
 import buildcraft.transport.pipe.PipeEventBus;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 
 public class PipeEventBusTester {
     public static long dontInlineThis = 0;
@@ -81,6 +79,7 @@ public class PipeEventBusTester {
             event.targetSpeed = 3;
         }
     }
+updated
     
     /* -------------------------- My test ------------------------------------ */
     public static final int NUM_TEST = 40;
@@ -262,4 +261,5 @@ public class PipeEventBusTester {
     					(random.nextInt(500) == 0 ? new Block(Material.CLOTH) : new Block(Material.GLASS)))));
     }
     
+ master
 }
