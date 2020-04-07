@@ -135,8 +135,8 @@ public class PipeEventBusTester {
         	ItemStack stack = getRandomStack(rand);
         	EnumDyeColor randColor = getRandomColor();
         	EnumFacing randFace = getRandomFaceDir();
-        	IPipeHolder holder;
-        	IFlowItems flow;
+        	IPipeHolder holder = null;
+        	IFlowItems flow = null;
         	
         	PipeEventItem.TryInsert ins = new PipeEventItem.TryInsert(holder, flow, randColor,
         			randFace, stack);
@@ -159,11 +159,35 @@ public class PipeEventBusTester {
         	ItemStack stack = getRandomStack(rand);
     		EnumDyeColor randColor = getRandomColor();
     		EnumFacing randFace = getRandomFaceDir();
-    		IPipeHolder holder;
-    		IFlowItems flow;
-    		PipeEventItem.ReachDest dest = new PipeEventItem.ReachDest(holder, flow, randColor
+    		IPipeHolder holder = null;
+    		IFlowItems flow = null;
+    		PipeEventItem.ReachDest dest = new PipeEventItem.ReachDest.OnInsert(holder, flow, randColor
     				, stack, randFace);
+    		dest.setStack(stack);
     		
+    		Assert.assertEquals(dest.colour, randColor);
+    		Assert.assertEquals(dest.getStack(), stack);
+    	}
+    }
+    
+    @Test
+    public void testEjected()
+    {
+    	Random random = new Random();
+    	int rand = 0;
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		rand = random.nextInt(11);
+        	ItemStack stack = getRandomStack(rand);
+    		EnumDyeColor randColor = getRandomColor();
+    		EnumFacing randFace = getRandomFaceDir();
+    		IPipeHolder holder = null;
+    		IFlowItems flow = null;
+    		PipeEventItem.ReachDest dest = new PipeEventItem.ReachDest.OnInsert(holder, flow, randColor
+    				, stack, randFace);
+    		dest.setStack(stack);
+    		Assert.assertEquals(dest.colour, randColor);
+    		Assert.assertEquals(dest.getStack(), stack);
     	}
     }
 
