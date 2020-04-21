@@ -3,7 +3,7 @@ package buildcraft.api.transport.pipe;
 /** The base class for all pipe events. Some event classes can be cancelled with {@link #cancel()}, however this will
  * only have an effect if {@link #canBeCancelled} is true. Refer to individual classes for information on if they can
  * be cancelled, and what cancelling the event does. */
-public abstract class PipeEvent {
+public class PipeEvent {
     public final boolean canBeCancelled;
     public final IPipeHolder holder;
     private boolean canceled = false;

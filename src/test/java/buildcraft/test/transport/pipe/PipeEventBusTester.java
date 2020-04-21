@@ -1,19 +1,38 @@
 package buildcraft.test.transport.pipe;
 
-updated
+
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Random;
 
 
- master
 import org.junit.Assert;
 import org.junit.Test;
 
 import buildcraft.api.transport.pipe.IFlowItems;
+import buildcraft.api.transport.pipe.IFlowPower;
 import buildcraft.api.transport.pipe.IPipeHolder;
+import buildcraft.api.transport.pipe.PipeEvent;
 import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
-
+import buildcraft.api.transport.pipe.PipeEventPower;
 import buildcraft.transport.pipe.PipeEventBus;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
 
 public class PipeEventBusTester {
     public static long dontInlineThis = 0;
@@ -79,9 +98,10 @@ public class PipeEventBusTester {
             event.targetSpeed = 3;
         }
     }
-updated
+
     
     /* -------------------------- My test ------------------------------------ */
+    
     public static final int NUM_TEST = 40;
     public static final EnumDyeColor FINAL_COLOR = EnumDyeColor.BLACK;
     public static final EnumFacing FINAL_FROM = EnumFacing.DOWN;
@@ -128,9 +148,10 @@ updated
     {
     	Random random = new Random();
     	int rand = 0;
+    	int max = 10, min = 1;
     	for(int i = 0; i < NUM_TEST; i++)
     	{
-    		rand = random.nextInt(11);
+    		rand = random.nextInt(11) + min;
         	ItemStack stack = getRandomStack(rand);
         	EnumDyeColor randColor = getRandomColor();
         	EnumFacing randFace = getRandomFaceDir();
@@ -178,15 +199,14 @@ updated
     	{
     		rand = random.nextInt(11);
         	ItemStack stack = getRandomStack(rand);
-    		EnumDyeColor randColor = getRandomColor();
+    		ItemStack stack2 = getRandomStack(rand);
     		EnumFacing randFace = getRandomFaceDir();
     		IPipeHolder holder = null;
     		IFlowItems flow = null;
-    		PipeEventItem.ReachDest dest = new PipeEventItem.ReachDest.OnInsert(holder, flow, randColor
-    				, stack, randFace);
-    		dest.setStack(stack);
-    		Assert.assertEquals(dest.colour, randColor);
-    		Assert.assertEquals(dest.getStack(), stack);
+    		IFlowItems other = null;
+    		PipeEventItem ejected = new PipeEventItem.Ejected.IntoPipe(holder, flow, stack, 
+    				stack2, randFace, other);
+    		
     	}
     }
 
@@ -260,6 +280,101 @@ updated
     				(i < 18 ? new Block(Material.CARPET) : 
     					(random.nextInt(500) == 0 ? new Block(Material.CLOTH) : new Block(Material.GLASS)))));
     }
+
+    @Test
+    public void PipeEventTest()
+    {
+    	List<PipeEvent> pipe = new ArrayList<PipeEvent>();
+    	
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		IPipeHolder hold = null;
+    		PipeEvent pip = new PipeEvent(hold);
+    		
+    		pipe.add(pip);
+    		Assert.assertEquals(pip.canBeCancelled, false);
+    		pip.cancel();
+    		Assert.assertEquals(pip.isCanceled(), false);
+    	}
+    	
+    	Assert.assertEquals(pipe.size(), NUM_TEST);
+    }
     
- master
+    @Test
+    public void PipeEventItemTest()
+    {
+    	IPipeHolder hold = null;
+    	IFlowItems flow = null;
+    	PipeEventItem item = new PipeEventItem(hold, flow);
+    	Assert.assertEquals(hold, item.holder);
+    	Assert.assertEquals(flow, item.flow);
+    }
+    
+    // I don't know how to do automation test on this one 
+    // because the variables required to test the method
+    // are not automated
+    @Test
+    @SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+    public void DropTest(LivingDropsEvent event)
+    {
+    	IPipeHolder hold = null;
+    	IFlowItems flow = null;
+    	EntityLivingBase deadEntity = event.getEntityLiving();
+    	World world = deadEntity.getEntityWorld();
+    	Random random = new Random();
+    	int i = random.nextInt(11);
+    	ItemStack stack = getRandomStack(i);
+    	BlockPos position = deadEntity.getPosition();
+    	double x = position.getX();
+    	double y = position.getY();
+    	double z = position.getZ();
+    	
+    	EntityItem entity = new EntityItem(world, x, y, z, stack);
+    			
+    	PipeEventItem.Drop drop = new PipeEventItem.Drop(hold, flow, entity);
+    	Assert.assertEquals(drop.getStack(), stack);
+    	Assert.assertEquals(drop.getEntity(), entity);
+    	
+    	stack = getRandomStack(0);
+    	drop.setStack(stack);
+    	Assert.assertEquals(ItemStack.EMPTY, entity.getItem());
+    }
+    
+    @Test
+    public void PipeEventPowerConfigureTest()
+    {
+    	IPipeHolder holder = null;
+    	IFlowPower flow = null;
+    	PipeEventPower.Configure config = new PipeEventPower.Configure(holder, flow);
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		Random random = new Random();
+    		long j = random.nextLong();
+    		long k = random.nextLong();
+    		long l = random.nextLong();
+    		
+    		config.setMaxPower(j);
+    		Assert.assertEquals(j, config.getMaxPower());
+    		config.setPowerLoss(k);
+    		Assert.assertEquals(k, config.getPowerLoss());
+    		config.setPowerResistance(l);
+    		Assert.assertEquals(l, config.getPowerResistance());
+    	}
+    }
+    
+    @Test
+    public void PipeEventPowerPrimaryDirectionTest()
+    {
+    	EnumFacing face = getRandomFaceDir();
+    	IPipeHolder holder = null;
+    	IFlowPower flow = null;
+    	PipeEventPower.PrimaryDirection dir = new PipeEventPower.PrimaryDirection(holder, flow, face);
+    	Assert.assertEquals(face, dir.getFacing());
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		EnumFacing face2 = getRandomFaceDir();
+    		dir.setFacing(face2);
+    		Assert.assertEquals(dir.getFacing(), face2);
+    	}
+    }
 }
