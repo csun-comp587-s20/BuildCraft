@@ -19,11 +19,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
-public abstract class PipeEventItem extends PipeEvent {
+public  class PipeEventItem extends PipeEvent {
 
     public final IFlowItems flow;
 
-    protected PipeEventItem(IPipeHolder holder, IFlowItems flow) {
+    public PipeEventItem(IPipeHolder holder, IFlowItems flow) {
         super(holder);
         this.flow = flow;
     }
@@ -402,6 +402,7 @@ public abstract class PipeEventItem extends PipeEvent {
     }
 
     /** Fired after {@link FindDest}. */
+    //done
     public static class ModifySpeed extends PipeEventItem {
         public final ItemEntry item;
         public final double currentSpeed;
@@ -421,6 +422,7 @@ public abstract class PipeEventItem extends PipeEvent {
     }
 
     /** Mostly immutable holding class for item stacks. */
+    // done
     public static class ItemEntry {
         public final EnumDyeColor colour;
         @Nonnull
