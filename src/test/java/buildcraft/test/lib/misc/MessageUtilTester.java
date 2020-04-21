@@ -41,4 +41,16 @@ public class MessageUtilTester {
         MessageUtil.readBooleanArray(buffer, got);
         Assert.assertArrayEquals(expected, got);
     }
+    @Test 
+    public void testBooleanArrayEmpty() {
+     
+        boolean[] expected = {};
+
+        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+        MessageUtil.writeBooleanArray(buffer, expected);
+        boolean[] got = MessageUtil.readBooleanArray(buffer, expected.length);
+        Assert.assertArrayEquals(expected, got);
+    }
+
+    
 }
