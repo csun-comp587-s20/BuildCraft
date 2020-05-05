@@ -1,6 +1,8 @@
 package buildcraft.test.transport.pipe;
 
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
+import buildcraft.api.transport.pipe.EnumPipeColourType;
 import buildcraft.api.transport.pipe.IFlowItems;
 import buildcraft.api.transport.pipe.IFlowPower;
 import buildcraft.api.transport.pipe.IPipeHolder;
@@ -17,6 +20,10 @@ import buildcraft.api.transport.pipe.PipeEvent;
 import buildcraft.api.transport.pipe.PipeEventHandler;
 import buildcraft.api.transport.pipe.PipeEventItem;
 import buildcraft.api.transport.pipe.PipeEventPower;
+import buildcraft.api.transport.pipe.PipeFaceTex;
+import buildcraft.api.transport.pipe.PipeFlowType;
+import buildcraft.api.transport.pipe.PipeFlowType.IFlowCreator;
+import buildcraft.api.transport.pipe.PipeFlowType.IFlowLoader;
 import buildcraft.transport.pipe.PipeEventBus;
 
 import net.minecraft.block.Block;
@@ -377,4 +384,51 @@ public class PipeEventBusTester {
     		Assert.assertEquals(dir.getFacing(), face2);
     	}
     }
+    
+    @Test
+    public void PipeFaceTexTest()
+    {
+    	int[] arr = new int[NUM_TEST-1];
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		Random random = new Random(63);
+        	int num = random.nextInt();
+    		arr[i] = num;
+    	}
+    	PipeFaceTex tex = new PipeFaceTex(arr);
+    	
+    	Assert.assertEquals(arr.length, tex.getCount());
+    	
+    	for(int i = 0; i < arr.length; i++)
+    	{
+    		Assert.assertEquals(arr[i], tex.getTexture(i));
+    	}
+    }
+    
+    public EnumPipeColourType getColourType()
+    {
+    	Random random = new Random();
+    	int i = random.nextInt(100);
+    	return i < 25 ? EnumPipeColourType.TRANSLUCENT :
+    		i < 50 ? EnumPipeColourType.CUSTOM :
+    			i < 75 ? EnumPipeColourType.BORDER_INNER :
+    				(EnumPipeColourType.BORDER_OUTER);
+    }
+    
+    public void pipeflowtypetester()
+    {
+    	IFlowCreator creator = null;
+    	IFlowLoader loader = null;
+    	
+    	for(int i = 0; i < NUM_TEST; i++)
+    	{
+    		EnumPipeColourType colour = getColourType();
+    		PipeFlowType type = new PipeFlowType(creator, loader, colour);
+    		Assert.assertEquals(colour, type.fallbackColourType);
+    	}
+    }
+    
+    
+    
+    
 }

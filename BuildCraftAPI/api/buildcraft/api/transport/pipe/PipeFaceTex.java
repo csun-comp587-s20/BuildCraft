@@ -81,7 +81,7 @@ public class PipeFaceTex {
         }
     }
 
-    private PipeFaceTex(int... textures) {
+    public PipeFaceTex(int... textures) {
         this(textures, EMPTY_INT_ARRAY);
     }
 
