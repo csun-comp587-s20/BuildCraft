@@ -16,7 +16,8 @@ public abstract class PipeEventPower extends PipeEvent {
         super(canBeCancelled, holder);
         this.flow = flow;
     }
-
+    
+    //done
     public static class Configure extends PipeEventPower {
         private long maxPower = 10 * MjAPI.MJ;
         /** The percentage resistance of the power pipe (as in, percentage of current power going through the pipe).
@@ -72,7 +73,8 @@ public abstract class PipeEventPower extends PipeEvent {
             this.receiver = receiver;
         }
     }
-
+    
+    // done
     public static class PrimaryDirection extends PipeEventPower {
         private EnumFacing facing;
 
