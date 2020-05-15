@@ -21,6 +21,93 @@ public class ItemTransactorTester extends VanillaSetupBaseTester {
     private ItemStack injectStack;
     
     @Test
+    public void emptyInventory_dontAdd(){
+
+        TransactorSimple split = new TransactorSimple(fakeInventory);
+        injectStack.stackSize = 64;
+
+        when(fakeInventory.getSizeInventory()).thenReturn(1);
+        when(fakeInventory.getStackInSlot(0)).thenReturn(null);
+
+        cut.inject(injectStack, ForgeDirection.UNKOWN, false);
+        verify(fakeInventory, never()).setInventorySlotContents(eq(0), (ItemStack) anyObject());
+    }
+
+	@Test
+	public void emptyInventory_doAdd(){
+
+        TransactorSimple cut = new TransactorSimple(fakeInventory);
+		injectStack.stackSize = 64;
+
+		when(fakeInventory.getSizeInventory()).thenReturn(1);
+		when(fakeInventory.getStackInSlot(0)).thenReturn(null);
+		when(fakeInventory.isStackValidForSlot(anyInt(), (ItemStack)anyObject())).thenReturn(true);
+		
+		cut.inject(injectStack, ForgeDirection.UNKNOWN, true);
+		verify(fakeInventory).setInventorySlotContents(eq(0), (ItemStack) anyObject());
+	}
+    
+    @Test
+	public void fullInventory_returnSuccess(){
+
+        TransactorSimple cut = new TransactorSimple(fakeInventory);
+
+		when(fakeInventory.getSizeInventory()).thenReturn(0);
+		when(fakeInventory.getStackInSlot(0)).thenReturn(fakeStack);
+        
+        int actual = cut.inject(injectStack, ForgeDirection.UNKNOWN, false);
+		assertEquals(0, actual);
+	}
+    
+    @Test
+	public void fullInventory_returnFail(){
+
+        TransactorSimple cut = new TransactorSimple(fakeInventory);
+
+		when(fakeInventory.getSizeInventory()).thenReturn(0);
+		when(fakeInventory.getStackInSlot(0)).thenReturn(fakeStack);
+        
+        int actual = cut.inject(injectStack, ForgeDirection.UNKNOWN, false);
+		assertEquals(1, actual);
+	}
+
+	@Test
+	public void halfFullInventory_returnFail(){
+
+        TransactorSimple cut = new TransactorSimple(fakeInventory);
+        ItemStack itemStack = mock(ItemStack.class);
+        injectStack.stackSize = 64;
+        itemStack.stackSize = 63;
+
+		when(itemStack.isItemEqual((ItemStack) anyObject())).thenReturn(true);
+		when(itemStack.getMaxStackSize()).thenReturn(64);		
+		when(ItemStack.areItemStackTagsEqual((ItemStack)anyObject(), (ItemStack)anyObject())).thenReturn(true);
+		when(fakeInventory.getSizeInventory()).thenReturn(1);
+		when(fakeInventory.getStackInSlot(0)).thenReturn(itemStack);
+        
+        int actual = cut.inject(injectStack, ForgeDirection.UNKNOWN, false);
+		assertEquals(1, actual);
+    }
+    
+	@Test
+	public void halfFullInventory_returnSuccess(){
+
+        TransactorSimple cut = new TransactorSimple(fakeInventory);
+        ItemStack itemStack = mock(ItemStack.class);
+        injectStack.stackSize = 64;
+        itemStack.stackSize = 63;
+
+		when(itemStack.isItemEqual((ItemStack) anyObject())).thenReturn(true);
+		when(itemStack.getMaxStackSize()).thenReturn(64);		
+		when(ItemStack.areItemStackTagsEqual((ItemStack)anyObject(), (ItemStack)anyObject())).thenReturn(true);
+		when(fakeInventory.getSizeInventory()).thenReturn(1);
+		when(fakeInventory.getStackInSlot(0)).thenReturn(itemStack);
+        
+        int actual = cut.inject(injectStack, ForgeDirection.UNKNOWN, false);
+		assertEquals(0, actual);
+    }
+
+    @Test
     public void testSimpleMoving() {
         IItemTransactor trans = new ItemHandlerSimple(2, null);
 
