@@ -14,7 +14,7 @@ public class PipeEvent {
     }
 
     /** deprecated: Because cancellation is going to be removed (at some point in the future) */
-    protected PipeEvent(boolean canBeCancelled, IPipeHolder holder) {
+    public  PipeEvent(boolean canBeCancelled, IPipeHolder holder) {
         this.canBeCancelled = canBeCancelled;
         this.holder = holder;
     }

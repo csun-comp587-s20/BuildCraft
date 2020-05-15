@@ -40,6 +40,7 @@ buildscript {
     }
 }
 
+apply plugin: 'jacoco' // add jacoco dependency
 apply plugin: "net.minecraftforge.gradle.forge" // adds the forge dependency
 apply plugin: 'maven' // for uploading to a maven repo
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -76,6 +77,19 @@ ext.priv = parseConfig(file('private.properties'))
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+jacoco{
+    toolVersion = "0.8.5"
+}
+
+jacocoTestReport{
+    reports{
+	html.enabled true
+	xml.enabled true
+	csv.enabled true
+	html.destination file("${buildDir}/jacocoHTML")
+    }
+}
 
 dependencies {
     // Testing
@@ -170,7 +184,15 @@ sourceSets {
             srcDir "sub_projects/expression/src/test/java"
         }
     }
+    
 }
+jacocoTestReport{
+		reports{
+			xml.enabled true
+			html.enabled true
+			html.destination "${buildDir}/reports/coverage"
+		}
+    }
 
 if (gradle.startParameter.taskNames.contains("checkstyle")) {
     checkstyle {
@@ -561,4 +583,5 @@ uploadArchives {
         add project.repositories.mavenLocal()
     }
 }
-
+build.dependsOn jacocoTestReport
+test.doLast jacocoTestReport.&execute

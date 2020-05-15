@@ -53,7 +53,7 @@ public class PipeFaceTex {
         return new PipeFaceTex(singleTexture);
     }
 
-    private PipeFaceTex(int[] textures, int... colours) {
+    public PipeFaceTex(int[] textures, int... colours) {
         this.textures = textures;
         this.colours = colours;
         for (int i = 0; i < colours.length; i++) {
