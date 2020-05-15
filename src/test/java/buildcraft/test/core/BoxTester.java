@@ -155,5 +155,20 @@ public class BoxTester {
 
     // goal is to creat some sort of automated testing for this .
     
+    @Test
+    public void automated_tests(){
+        final int NUM_TESTS = 100;
+     
+        for (int i = 0; i < NUM_TESTS; i++) {
+            Box box = new Box(new BlockPos(i, i, i), new BlockPos(i,i,i));
+                for (int j= 0; j< NUM_TESTS; j++){
+                    Box inter =new Box(new BlockPos(j,j,j), new BlockPos(j,j,j));
+    
+      Assert.assertEquals(inter.getIntersect(box) ,box.getIntersect(inter));
+          }
+         
+        }
+    
+	}
 
 }
