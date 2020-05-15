@@ -19,11 +19,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
-public abstract class PipeEventItem extends PipeEvent {
+public class PipeEventItem extends PipeEvent {
 
     public final IFlowItems flow;
 
-    protected PipeEventItem(IPipeHolder holder, IFlowItems flow) {
+    public PipeEventItem(IPipeHolder holder, IFlowItems flow) {
         super(holder);
         this.flow = flow;
     }
@@ -348,7 +348,7 @@ public abstract class PipeEventItem extends PipeEvent {
     }
 
     /** Base class for {@link Split} and {@link FindDest}. Do not listen to this directly! */
-    public static abstract class OrderedEvent extends PipeEventItem {
+    public static class OrderedEvent extends PipeEventItem {
         public final List<EnumSet<EnumFacing>> orderedDestinations;
 
         public OrderedEvent(IPipeHolder holder, IFlowItems flow, List<EnumSet<EnumFacing>> orderedDestinations) {
