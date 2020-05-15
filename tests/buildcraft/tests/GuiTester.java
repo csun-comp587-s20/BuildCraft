@@ -8,6 +8,7 @@
  */
 package buildcraft.tests;
 
+import org.junit.Test;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -143,7 +144,7 @@ public class GuiTester extends GuiContainer {
             super.keyTyped(c, i);
         }
     }
-/* Tests - BROKEN TESTS NEEDS TO BE FIXED*/
+
     @Test
     public void typedString(){
         keyTyped msnt = new keyTyped();
@@ -187,5 +188,67 @@ public class GuiTester extends GuiContainer {
         assertSame(msnt.button, msnt.cancel);
     }
 
+    @Test
+    public void guiPlay(){
+        initGui msnt = new initGui();
+        assertNotNull(msnt.play("Play"));
+    }
+
+    @Test
+    public void guiOptions(){
+        initGui msnt = new initGui();
+        assertNotNull(msnt.option("Options"));
+    }
+
+    @Test
+    public void guiAccount(){
+        initGui msnt = new initGui();
+        assertNotNull(msnt.account("Account"));
+    }
+
+    @Test
+    public void guiWelcome(){
+        initGui msnt = new initGui();
+        assertNotNull(msnt.string("Welcome to Minecraft Forge!"));
+    }
+
+    @Test
+    public void forgeType(){
+        keyTyped msnt = new keyTyped();
+        int release = 1.15;
+        int current = 1.15;
+        assertTrue("Forge 1.15 are the same", release.msnt = current.msnt);
+    }
+
+    @Test
+    public void testInputinMainMenu(){
+        
+        MainFrame frame;
+        JTestField inputTest;
+        String expResult;
+
+        frame = new MainFrame();
+        frame.setVisible(true);
+
+        inputTest = (JTextField) TestUtils.getChildNamed(frame, "input");
+        expResult = "JTextField unreachable in main menu";
+
+        inputTest.setText("just testing");
+        sleep(2000);
+
+        inputTest.postActionEvent();
+        sleep(2000);
+
+        assertNotNull("Unable to reach JtextFeild component", inputTest);
+        assertEquals(expResylt, inputTest.getText());
+    }
+
+    @Test
+    public void guiMainTesting(){
+        System.out.println("main menu");
+        String[] args = null;
+        MainFrame.main(args);
+        fail("Main menu has failed");
+    }
 }
 
