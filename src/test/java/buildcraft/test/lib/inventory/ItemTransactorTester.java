@@ -174,4 +174,114 @@ public class ItemTransactorTester extends VanillaSetupBaseTester {
         int actual = cut.inject(injectStack, ForgeDirection.UNKNOWN, true);
         assertEquals(0, actual);
     }
+
+    @Test
+    public void stackMerge_isNull(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack itemStack = new ItemStack();
+
+        boolean itemsInventory = split.canStacksMerge(null, itemStack);
+        assertFalse(itemsInventory);
+    }
+
+    @Test
+    public void otherStackMerge_isNull(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack itemStack = new ItemStack();
+
+        boolean itemsInventory = split.canStacksMerge(itemStack, null);
+        assertFalse(itemsInventory);
+    }
+
+    @Test
+    public void mergeDifferent_Items(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack item1 = new ItemStack();
+        ItemStack item2 = new ItemStack();
+
+        when(item1.isItemEqual(item2)).thenReturn(false);
+        boolean itemsInventory = split.canStacksMerge(item1, item2);
+        assertFalse(itemsInventory);
+    }
+
+    @Test
+    public void stacksCantMerge(){
+
+        StackMergeHelper split = new StackMergeHelper();
+
+        int itemsInventory = split.mergeStacks(null, null, false);
+        assertEquals(0, actual);
+    }
+
+    @Test
+    public void stackItemsNoSpace_returnFail(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack item1 = new ItemStack();
+        ItemStack item2 = new ItemStack();
+        item1.stackSize = 1;
+        item2.stackSize = 64;
+
+        when(item1.isItemEqual(item2)).thenReturn(true);
+        when(item2.getMaxStackSize()).thenReturn(64);
+        when(ItemStack.areItemStackTagsEqual(item1, item2)).thenReturn(true);
+
+        int itemsInventory = split.mergeStacks(item1, item2, false);
+        assertEquals(0, itemsInventory);
+    }
+
+    @Test
+    public void stackItems_AvailableSpace(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack item1 = new ItemStack();
+        ItemStack item2 = new ItemStack();
+        item1.stackSize = 1;
+        item2.stackSize = 63;
+
+        when(item1.isItemEqual(item2)).thenReturn(true);
+        when(item2.getMaxStackSize()).thenReturn(64);
+        when(ItemStack.areItemStackTagsEqual(item1, item2)).thenReturn(true);
+
+        int itemsInventory = split.mergeStacks(item1, item2, false);
+        assertEquals(1, itemsInventory);
+    }
+
+    @Test
+    public void stackItems_AvailableSpace_MergeComplete(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack item1 = new ItemStack();
+        ItemStack item2 = new ItemStack();
+        item1.stackSize = 1;
+        item2.stackSize = 63;
+
+        when(item1.isItemEqual(item2)).thenReturn(true);
+        when(item2.getMaxStackSize()).thenReturn(64);
+        when(ItemStack.areItemStackTagsEqual(item1, item2)).thenReturn(true);
+
+        int itemsInventory = split.mergeStacks(item1, item2, false);
+        assertEquals(64, item2.stackSize);
+    }
+
+    @Test
+    public void stackItems_individualItems(){
+
+        StackMergeHelper split = new StackMergeHelper();
+        ItemStack item1 = new ItemStack();
+        ItemStack item2 = new ItemStack();
+        item1.stackSize = 1;
+        item2.stackSize = 1;
+
+        when(item1.isItemEqual(item2)).thenReturn(true);
+        when(item2.getMaxStackSize()).thenReturn(64);
+        when(ItemStack.areItemStackTagsEqual(item1, item2)).thenReturn(true);
+
+        int itemsInventory = split.mergeStacks(item1, item2, false);
+        assertEquals(1, itemsInventory);
+    }
+
 }
