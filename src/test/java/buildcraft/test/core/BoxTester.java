@@ -1,5 +1,5 @@
 package buildcraft.test.core;
-
+import java.util.Random;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -158,14 +158,16 @@ public class BoxTester {
     @Test
     public void automated_tests(){
         final int NUM_TESTS = 100;
-     
+       
         for (int i = 0; i < NUM_TESTS; i++) {
-            Box box = new Box(new BlockPos(i, i, i), new BlockPos(i,i,i));
-                for (int j= 0; j< NUM_TESTS; j++){
-                    Box inter =new Box(new BlockPos(j,j,j), new BlockPos(j,j,j));
+        Random rand= new Random();
+        int k = rand.nextInt(12);
+            Box box = new Box(new BlockPos(k, k, k), new BlockPos(k,k,k));
+                
+            Box inter =new Box(new BlockPos(k,k,k), new BlockPos(k,k,k));
     
-      Assert.assertEquals(inter.getIntersect(box) ,box.getIntersect(inter));
-          }
+      Assert.assertEquals(inter ,box.getIntersect(inter));
+          
          
         }
     
